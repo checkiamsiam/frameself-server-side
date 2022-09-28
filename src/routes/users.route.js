@@ -1,8 +1,15 @@
-const express = require('express')
-const userRoute = express.Router()
+const express = require("express");
+const UserModel = require("../models/user.model");
+const userRoute = express.Router();
 
-userRoute.get('/' , (req , res) => {
-  res.send("welcome from user")
-})
+userRoute.post("/", async (req, res) => {
+  try {
+    const user = new UserModel(req.body);
+    await user.save();
+    res.send("success");
+  } catch (error) {
+    res.send(error.message);
+  }
+});
 
-module.exports = userRoute
+module.exports = userRoute;
