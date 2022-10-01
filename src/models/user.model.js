@@ -1,34 +1,40 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const beforeSaveUser = require("../middleware/beforeSaveUser");
 const { ObjectId } = mongoose.Schema.Types;
 
 const userSchema = mongoose.Schema(
   {
     firstName: {
       type: String,
-      required: [true, "first name must be require"],
+      required: [true, "must be require"],
       trim: true,
+      minLength : [3 , "it must be between 3 to 30 characters"] , 
+      maxLength : [30 , "it must be between 3 to 30 characters"]
     },
     lastName: {
       type: String,
-      required: [true, "last name must be require"],
+      required: [true, "must be require"],
       trim: true,
+      minLength : [3 , "it must be between 3 to 30 characters"] , 
+      maxLength : [30 , "it must be between 3 to 30 characters"]
     },
     username: {
       type: String,
-      required: [true, "username must be require"],
       trim: true,
-      toLowercase: true,
-      unique: [true, "username can't be {VALUE} / {VALUE} is already taken"],
+      unique: true ,
+      lowercase : true ,
     },
     email: {
       type: String,
+      unique : true , 
       validate: [validator.isEmail, "provide a valid email"],
+      lowercase : true ,
     },
     password: {
       type: String,
       required: true,
-      minLength: [8, "password must have minimum 8 character"],
+      minLength : [8 , "password must be 8 character"]
     },
     profilePhoto: {
       type: String,
@@ -161,6 +167,9 @@ const userSchema = mongoose.Schema(
 
   { timestamp: true }
 );
+
+userSchema.pre('save', beforeSaveUser);
+
 
 const UserModel = mongoose.model("User", userSchema);
 
