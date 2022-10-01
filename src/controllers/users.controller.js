@@ -1,9 +1,11 @@
 const userServices = require("../services/users.services");
+var jwt = require('jsonwebtoken');
 
 module.exports.addUser = async (req, res, next) => {
   try {
-    const result = await userServices.addUser(req);
-    res.send({ success: true, message:  result});
+    const newUser = await userServices.addUser(req);
+    var accessToken = jwt.sign({ email : newUser.email , _id : newUser._id }, process.env.TOKEN_SECRET);
+    res.send({ success: true, message:  "user registered" , accessToken });
   } catch (error) {
     if(error.keyPattern){
       console.log(error);
