@@ -8,3 +8,12 @@ module.exports.addUser = async (req) => {
   const savedUserData = await user.save();
   return savedUserData;
 };
+
+module.exports.checkVerification = async (id) => {
+  const user = await UserModel.findById(id)
+  return user.verified
+}
+module.exports.verifyAccount = async (id) => {
+  const user = await UserModel.findByIdAndUpdate(id , {$set : {verified : true}})
+  return user
+}

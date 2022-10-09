@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const handleError = require("../middleware/errorHandler");
+require("dotenv").config();
 
 const dbConnect = () => {
   mongoose
