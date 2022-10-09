@@ -13,7 +13,7 @@ module.exports.register = async (req, res, next) => {
       success: true,
       message: "registration successful | please activate email",
       accessToken,
-      id: newUser._id,
+      _id: newUser._id,
       username: newUser.username,
       firstName: newUser.firstName,
       lastName: newUser.lastName,
@@ -39,6 +39,31 @@ module.exports.activateAccount = async (req, res, next) => {
     } else {
       await userServices.verifyAccount(user._id);
       res.send({ success: true, message: "account has been activated" });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports.login = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    const user = await userServices.verifyEmailPassword(email, password, res);
+    if (!user) {
+      res.status(401).send({success: false , message: "your entire email or password is invalid"})
+    } else {
+      const accessToken = generateToken({ email: user.email, _id: user._id }, "7d");
+      res.send({
+        success: true,
+        message: "login successful",
+        accessToken,
+        _id: user._id,
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        profilePhoto: user.lastName,
+        verified: user.verified,
+      });
     }
   } catch (error) {
     next(error);
