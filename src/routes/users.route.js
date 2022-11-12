@@ -1,15 +1,9 @@
 const express = require("express");
-const UserModel = require("../models/user.model");
+const userController = require("../controllers/users.controller");
 const userRoute = express.Router();
 
-userRoute.post("/", async (req, res) => {
-  try {
-    const user = new UserModel(req.body);
-    await user.save();
-    res.send("success");
-  } catch (error) {
-    res.send(error.message);
-  }
-});
+userRoute.post("/register", userController.register);
+userRoute.put("/activate/", userController.activateAccount);
+userRoute.get("/login/", userController.login);
 
 module.exports = userRoute;
